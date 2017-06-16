@@ -1,56 +1,71 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
-int read_file(FILE *file){
+
+int read_file(FILE *file) 
+{
     int value;
-    int restart = 0;
-    while(!restart)
-    {
-        if(fscanf(file,"%d",&value) != EOF)
-            restart = 1;
-        else
-            sleep(1);
+    /*
+    while( fscanf(file, "%d", &value) == EOF ) {
+        printf("sleep\n");
+        sleep(1);
     }
+    */
+    while( fscanf(file, "%d", &value) == EOF ) {
+        printf("sleep %d\n", feof(file) );
+        sleep(1);
+    }
+    
+   // printf("value %d\n", value);
     return value;
 }
 
-int minimum(int v1, int v2, int v3)
-{
-    if(v1 <= v2){
-        if(v1 <= v3)
-            return v1;
-    }
-    else{
-        if(v2 <= v3)
-            return v2;
-        else
-            return v3;
-    }
-}
-int main()
-{
-    FILE *f1, *f2, *f3;
-    int value1, value2, value3, min;
-    f1 = fopen("file1.txt", "r");
-    f2 = fopen("file2.txt", "r");
-    f3 = fopen("file3.txt", "r");
-    value1 = read_file(f1);
-    value2 = read_file(f2);
-    value3 = read_file(f3);
-    //printf("%d %d %d\n", value1, value2,value3);
 
-    while(1)
-    {
-        min = minimum(value1, value2, value3);
-        printf("%d\n", min);
-
-        if (min == value1) {
-            value1 = read_file(f1);
-        } else if (min == value2) {
-            value2 = read_file(f2);
-        } else if (min == value3) {
-            value3 = read_file(f3);
+int minimum( int *values, int n ) 
+{
+    int min = values[0];
+    int index = 0;
+    for(int i=1; i<n; i++) {
+        if(values[i] < min) {
+            min = values[i];
+            index = i;
         }
     }
+    return index;
+}
+
+int main(int argc, const char* argv[])
+{
+    int n = argc -1;
+    int values[n];
+    int index;
+    FILE *files[n];
+    
+    if (argc == 1) {
+        printf("Error no input file");
+        exit(1);
+    }
+
+    // opening all the files and checking whether they exist or not.
+    for (int i = 1; i < argc; i++) {
+        files[i-1] = fopen(argv[i], "r+");
+        if (files[i-1] == NULL) {
+            printf("File %s doesn't exist!!!", argv[i]);
+            return 1;
+        }
+    } 
+
+    for (int i = 0; i < n; i++) {
+        values[i] = read_file(files[i]);
+        printf("read stream n %d of value %d\n", i, values[i]);
+    }
+
+     while (1) {
+        index = minimum(values, n);
+        printf("%d\n", values[index]);
+        values[index] = read_file(files[index]); 
+    } 
+    
 }
 
