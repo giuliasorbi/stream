@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include "minimum.h"
+#include <iostream>
+#include "min.h"
 
 int minimum( int *values, int n ) 
 {

@@ -1,0 +1,23 @@
+CC = gcc
+CFLAGS = -c -Wall
+OBJECTS = stream.o read_file.o minimum.o
+EXECUTABLE = stream
+
+all: $(EXECUTABLE)
+
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(OBJECTS) -o $(EXECUTABLE)
+
+%o: %c
+	$(CC) $(CFLAGS) $< -o $@
+
+clean:
+	rm $(OBJECTS) $(EXECUTABLE)
+#stream.o: stream.c
+#	$(CC) $(CFLAGS) stream.c
+
+#utils.o: utils.c
+#	$(CC) $(CFLAGS) read_file.c
+
+#utils2.o: utils2.c
+#	$(CC) $(CFLAGS) minimum.c

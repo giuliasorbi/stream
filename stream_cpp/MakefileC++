@@ -1,0 +1,15 @@
+CC = g++
+CFLAGS = -c -Wall -std=c++11
+OBJECTS = stream.o read.o min.o
+EXECUTABLE = stream
+
+all: $(EXECUTABLE)
+
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(OBJECTS) -o $(EXECUTABLE)
+
+%o: %cpp
+	$(CC) $(CFLAGS) $< -o $@
+
+clean:
+	rm $(OBJECTS) $(EXECUTABLE)
